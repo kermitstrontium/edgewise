@@ -9,5 +9,5 @@ systemctl --user daemon-reload
 systemctl --user enable --now edgewise.service
 sleep 1
 curl -s -o /dev/null -w 'local %{http_code}\n' http://127.0.0.1:8097/
-sudo tailscale serve --bg --https=9451 http://127.0.0.1:8097
-sudo tailscale serve status
+tailscale serve --bg --https=9451 http://127.0.0.1:8097
+tailscale serve status

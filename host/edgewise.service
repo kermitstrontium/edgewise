@@ -1,0 +1,14 @@
+[Unit]
+Description=Edgewise static site (tailnet :9451 -> 127.0.0.1:8097)
+Documentation=file://%h/ai-share/edgewise/CLAUDE.md
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/ai-share/edgewise
+ExecStart=/usr/bin/python3 %h/ai-share/edgewise/serve.py --port 8097 --bind 127.0.0.1
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=default.target
