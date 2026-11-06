@@ -30,8 +30,15 @@ an original game: its own name, look and twist. Don't copy Zip's name or visuals
 ## Ship
 - New entry at the top of `js/changelog.js` per release. `./deploy.sh` runs tests and stamps the
   service-worker build; `./deploy.sh --push "msg"` also commits and pushes.
-- Local server: `serve.py` on 127.0.0.1:8097 (`host/edgewise.service`), tailnet `:9451` planned.
-  Hosting not yet set up; see the bottom of this file for the current state.
+- Public: GitHub Pages from `main` root, repo github.com/kermitstrontium/edgewise (public, so
+  Pages works on the free plan). Live at https://kermitstrontium.github.io/edgewise/.
+  Custom domain edgewise.berger.au is planned. Harry adds a CNAME `edgewise` to
+  kermitstrontium.github.io at Fastmail DNS, then we add a `CNAME` file and set the Pages domain.
+  Don't add the CNAME file before the DNS exists: github.io would redirect to a dead domain.
+- Tailnet: `edgewise.service` (user unit, serve.py on 127.0.0.1:8097) behind
+  `tailscale serve --https=9451` (no sudo needed): https://frozen-wsl.tail50be60.ts.net:9451/
+  serve.py reads from this folder, so the tailnet copy is live as soon as files change.
+- git, gh and the browser test need dangerouslyDisableSandbox.
 
 ## State
-- 2026-11-06: v1.0.0 built and tested locally. Waiting on Harry to choose hosting.
+- 2026-11-06: v1.0.0 shipped to both hosts. Browser playtest passes on both.
