@@ -250,7 +250,10 @@ function cellAt(sx, sy) {
 
 /* ---------- input ---------- */
 
-let dragging = false;
+// While dragging, the line only rewinds when the finger is on its end and
+// steps back along it (two squares, to allow for a fast swipe). Crossing the
+// line anywhere else leaves it alone. A tap on the line still rewinds to it.
+let dragging = false, lastCell = -1;
 cv.addEventListener('pointerdown', (e) => {
   sfx.wake();
   if (mapView) { toggleMap(); return; }
@@ -261,6 +264,7 @@ cv.addEventListener('pointerdown', (e) => {
   dragging = true;
   cv.setPointerCapture(e.pointerId);
   if (path.includes(c)) rewindTo(c); else moveToward(c);
+  lastCell = c;
   dirty = true; save();
 });
 cv.addEventListener('pointermove', (e) => {
@@ -268,8 +272,11 @@ cv.addEventListener('pointermove', (e) => {
   const g = cur();
   if (!g || g.solved) return;
   const c = cellAt(e.offsetX, e.offsetY);
-  if (c < 0 || c === path[path.length - 1]) return;
-  if (path.includes(c)) rewindTo(c); else moveToward(c);
+  if (c < 0 || c === lastCell) return;
+  const head = path[path.length - 1], i = path.indexOf(c);
+  if (i >= 0) { if (lastCell === head && i >= path.length - 3) rewindTo(c); }
+  else moveToward(c);
+  lastCell = c;
   dirty = true; save();
 });
 const endDrag = () => { dragging = false; };

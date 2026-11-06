@@ -49,6 +49,29 @@ for (const scheme of ['dark', 'light']) {
       check(len === n, `${kind}: partial drag drew ${len}/${n} cells`);
       await page.waitForTimeout(300);
       await page.screenshot({ path: shots + `play-${scheme}.png` });
+
+      // Rewind rules.
+      const box = await page.$('#cv').then((e) => e.boundingBox());
+      const at = async (c) => { const [x, y] = await page.evaluate((c) => window.__edgewise.cellToScreen(c), c); return [box.x + x, box.y + y]; };
+      const line = () => page.evaluate(() => window.__edgewise.path.slice());
+      let p0 = await line();
+      // Drag from the end straight across the middle of the line.
+      await page.mouse.move(...await at(p0.at(-1))); await page.mouse.down();
+      await page.mouse.move(...await at(p0[3])); await page.mouse.move(...await at(p0[2]));
+      await page.mouse.move(...await at(p0[1])); await page.mouse.up();
+      let p1 = await line();
+      check(p1.length >= p0.length && p1.slice(0, p0.length).join() === p0.join(), `${kind}: dragging across the line keeps it (${p0.length} -> ${p1.length})`);
+      // Trace back from the end, one square at a time.
+      p0 = p1;
+      await page.mouse.move(...await at(p0.at(-1))); await page.mouse.down();
+      for (const k of [2, 3, 4]) await page.mouse.move(...await at(p0.at(-k)), { steps: 3 });
+      await page.mouse.up();
+      p1 = await line();
+      check(p1.length === p0.length - 3, `${kind}: tracing back rewinds (${p0.length} -> ${p1.length})`);
+      // Tap an earlier square.
+      await page.mouse.click(...await at(p1[2]));
+      p1 = await line();
+      check(p1.length === 3, `${kind}: tapping the line rewinds to there (${p1.length})`);
       await page.click('#btn-map');
       await page.waitForTimeout(1200);
       await page.screenshot({ path: shots + `map-${scheme}.png` });

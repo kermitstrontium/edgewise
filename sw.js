@@ -2,7 +2,7 @@
    once loaded, but always picks up a new deploy when online.
    BUILD is stamped by deploy.sh; the bytes must change for phones to update. */
 
-const BUILD = '20261106-082032';
+const BUILD = '20261106-132403';
 const CACHE = 'edgewise-' + BUILD;
 const ASSETS = [
   './', './index.html', './styles.css', './manifest.webmanifest',
