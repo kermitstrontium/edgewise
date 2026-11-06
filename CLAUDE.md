@@ -31,7 +31,9 @@ an original game: its own name, look and twist. Don't copy Zip's name or visuals
 - New entry at the top of `js/changelog.js` per release. `./deploy.sh` runs tests and stamps the
   service-worker build; `./deploy.sh --push "msg"` also commits and pushes.
 - Public: GitHub Pages from `main` root, repo github.com/kermitstrontium/edgewise (public, so
-  Pages works on the free plan). Live at https://kermitstrontium.github.io/edgewise/.
+  Pages works on the free plan). Live at https://edgewise.berger.au (CNAME file + Pages
+  custom domain; the DNS CNAME `edgewise` → kermitstrontium.github.io is at Fastmail, added
+  by Harry 2026-11-06). The github.io address redirects there.
 - Tailnet: `edgewise.service` (user unit, serve.py on 127.0.0.1:8097) behind
   `tailscale serve --https=9451` (no sudo needed): https://frozen-wsl.tail50be60.ts.net:9451/
   serve.py reads from this folder, so the tailnet copy is live as soon as files change.
